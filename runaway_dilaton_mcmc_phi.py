@@ -23,6 +23,7 @@ from scipy.optimize import minimize
 import emcee
 from numpy import genfromtxt
 import sys
+from schwimmbad import MultiPool
 
 
 
@@ -205,12 +206,19 @@ def log_probability(theta, rho_data, rho_err):
     return lp + log_likelihood(theta, rho_data, rho_err)
 
 
-pos =  soln.x + 1e-2 * np.random.randn(32, 4)
-nwalkers, ndim = pos.shape
+with MultiPool() as pool:
+	pos =  soln.x + 1e-2 * np.random.randn(32, 4)
+	nwalkers, ndim = pos.shape
 
-sampler = emcee.EnsembleSampler(nwalkers, ndim, log_probability, args=(rho_dat, sigma))
-sampler.run_mcmc(pos,10000, progress=True, store=True);
+	sampler = emcee.EnsembleSampler(nwalkers, ndim, log_probability, args=(rho_dat, sigma), pool=pool)
+	sampler.run_mcmc(pos,10000, progress=True);
 
+for i in range(0,32):
+  chain= []
+  chain= sampler.get_chain()[:,i,:]
+  chain= np.concatenate((np.zeros((len(sampler.get_chain()[:,0,0]),1), dtype=int), chain), axis=1)
+  chain= np.concatenate((np.ones((len(sampler.get_chain()[:,0,0]),1), dtype=int), chain), axis=1)
+  np.savetxt('test'+str(i)+'.txt',chain)
 
 fig, axes = plt.subplots(4, figsize=(10, 7), sharex=True)
 samples = sampler.get_chain()
