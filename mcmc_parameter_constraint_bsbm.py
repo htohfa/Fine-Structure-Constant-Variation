@@ -188,7 +188,7 @@ for i in range(0,32):
   chain= sampler.get_chain()[:,i,:]
   chain= np.concatenate((np.zeros((len(sampler.get_chain()[:,0,0]),1), dtype=int), chain), axis=1)
   chain= np.concatenate((np.ones((len(sampler.get_chain()[:,0,0]),1), dtype=int), chain), axis=1)
-  np.savetxt('test'+str(i)+'.txt',chain)
+  np.savetxt('test_'+str(i)+'.txt',chain)
 
 
 fig, axes = plt.subplots(2, figsize=(10, 7), sharex=True)
