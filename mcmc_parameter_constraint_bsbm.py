@@ -25,7 +25,7 @@ from numpy import genfromtxt
 import sys
 from schwimmbad import MultiPool
 
-
+#Importing Eigenmodes
 z = np.loadtxt("EM_1.dat")[:, 0]
 alpha = np.loadtxt("EM_1.dat")[:, 1]
 z2 = np.loadtxt("EM_2.dat")[:, 0]
@@ -53,7 +53,6 @@ for i in range(0,len(z)):
         alpha_eigenvalue3.append(alpha3[i])
         redshift_data3.append(z3[i])
 
-np.mean(alpha_eigenvalue)
 
 interpolation= interp1d(redshift_data,alpha_eigenvalue, fill_value='extrapolate' )
 interpolation2= interp1d(redshift_data2,alpha_eigenvalue2, fill_value='extrapolate' )
@@ -81,6 +80,7 @@ for i in range(0,len(z)):
         redshift_data3.append(z3[i])
 
 def rho(m, zeta):
+#refernce value
   w= -.00023
   def dU_dx(U, x):
     return [U[1], -(2./(1.+x)+((3.*.3+4*9.236*10**(-5))/(2.*(1.+x)**5.*(.3*(1.+x)**3.+9.236*10**(-5)*(1.+x)**4+.73))))*U[1] -6.*w*.3*np.exp(-2.*U[0])*((1.+x)/(.3*(1.+x)**3.+9.236*10**(-5)*(1.+x)**4+.73))-(np.power(10.,m))*U[0]/((x+1.)**2.*((1.+x)**3.+9.236*10**(-5)*(1.+x)**4+.73))]
@@ -89,7 +89,7 @@ def rho(m, zeta):
   Us = odeint(dU_dx, U0, xs)
   ys = Us[:,0]
 
-  #ref_cases
+  #refference cases for PCA
   trapezoid_area=[]
   rho_ref=[]
   for k in range (0,1999):
@@ -212,7 +212,7 @@ flat_samples = sampler.get_chain(discard=100, thin=15, flat=True)
 print(flat_samples.shape)
 
 
-import corner
+
 labels = ["zeta", "m"]
 fig = corner.corner(
     flat_samples, labels=labels,levels=(0.68,0.95,0.99,)
