@@ -25,7 +25,7 @@ from numpy import genfromtxt
 import sys
 from schwimmbad import MultiPool
 
-#Importing Eigenmodes
+
 z = np.loadtxt("EM_1.dat")[:, 0]
 alpha = np.loadtxt("EM_1.dat")[:, 1]
 z2 = np.loadtxt("EM_2.dat")[:, 0]
@@ -53,6 +53,7 @@ for i in range(0,len(z)):
         alpha_eigenvalue3.append(alpha3[i])
         redshift_data3.append(z3[i])
 
+np.mean(alpha_eigenvalue)
 
 interpolation= interp1d(redshift_data,alpha_eigenvalue, fill_value='extrapolate' )
 interpolation2= interp1d(redshift_data2,alpha_eigenvalue2, fill_value='extrapolate' )
@@ -79,20 +80,20 @@ for i in range(0,len(z)):
         alpha_eigenvalue3.append(alpha3[i])
         redshift_data3.append(z3[i])
 
-def rho(m, zeta):
-#refernce value
-  w= -.00023
+def rho_cal( zeta,m):
+  w= -.00023 #reference Value
   def dU_dx(U, x):
-    return [U[1], -(2./(1.+x)+((3.*.3+4*9.236*10**(-5))/(2.*(1.+x)**5.*(.3*(1.+x)**3.+9.236*10**(-5)*(1.+x)**4+.73))))*U[1] -6.*w*.3*np.exp(-2.*U[0])*((1.+x)/(.3*(1.+x)**3.+9.236*10**(-5)*(1.+x)**4+.73))-(np.power(10.,m))*U[0]/((x+1.)**2.*((1.+x)**3.+9.236*10**(-5)*(1.+x)**4+.73))]
+                    # Here U is a vector such that y=U[0] and z=U[1]. This function should return [y', z']
+    return  [U[1], -(2./(1.+x)+(3.*.03/(2.*(1.+x)**2.*(.3*(1.+x)**3.+.7))))*U[1] +2.*w*.3*np.exp(-2.*U[0])*((1.+x)/(.3*(1.+x)**3.+.7))-(np.power(10.,m))*U[0]/((x+1.)**2.*((1.+x)**3.+.7))]
   U0 = [0., 0.]
-  xs = np.linspace(0., 1600., 2000)
+  xs = np.linspace(0., 1600., 200)
   Us = odeint(dU_dx, U0, xs)
-  ys = Us[:,0]
+  ys = 2*Us[:,0]
 
-  #refference cases for PCA
+  #ref_cases
   trapezoid_area=[]
   rho_ref=[]
-  for k in range (0,1999):
+  for k in range (0,199):
     kth = interpolation(xs[k])*ys[k]
     kplus1th = interpolation(xs[k+1])*ys[k+1]
     area= .5*(kth+ kplus1th)*(xs[k+1]-xs[k])
@@ -102,7 +103,7 @@ def rho(m, zeta):
   normalized_rho_ref = integral_ref/(-.00023)
   trapezoid_area=[]
   rho_ref2=[]
-  for k in range (0,1999):
+  for k in range (0,199):
     kth = interpolation2(xs[k])*ys[k]
     kplus1th = interpolation2(xs[k+1])*ys[k+1]
     area= .5*(kth+ kplus1th)*(xs[k+1]-xs[k])
@@ -113,7 +114,7 @@ def rho(m, zeta):
 
   trapezoid_area=[]
   rho_ref3=[]
-  for k in range (0,1999):
+  for k in range (0,199):
     kth = interpolation3(xs[k])*ys[k]
     kplus1th = interpolation3(xs[k+1])*ys[k+1]
     area= .5*(kth+ kplus1th)*(xs[k+1]-xs[k])
@@ -128,7 +129,6 @@ def rho(m, zeta):
   rho_3 = delta_A*normalized_rho_ref3
   rho_val= np.transpose([rho_1,rho_2,rho_3])
   return rho_val
-
 
 
 
@@ -212,7 +212,7 @@ flat_samples = sampler.get_chain(discard=100, thin=15, flat=True)
 print(flat_samples.shape)
 
 
-
+import corner
 labels = ["zeta", "m"]
 fig = corner.corner(
     flat_samples, labels=labels,levels=(0.68,0.95,0.99,)
