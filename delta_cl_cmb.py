@@ -301,7 +301,55 @@ for j in range(0, len(cl_tt_pc1)):
     delta_cl3 = rho_2sig[2]*cl_ee_pc3[j]
     dcl_ee_2sig.append((delta_cl+delta_cl2+delta_cl3))
 
-fig, ax = plt.subplots(2,3, figsize = (15,9))
+
+
+#plt.rc('font',**{'family':'serif','serif':['Palatino']})
+#plt.rc('text', usetex=True)
+matplotlib.rcParams['font.family'] = 'Times New Roman'
+plt.rcParams["figure.figsize"] = [8.0,6.0]
+axislabelfontsize='large'
+matplotlib.mathtext.rcParams['legend.fontsize']='medium'
+
+plt.rc("axes", linewidth=2.0)
+plt.rc("lines", markeredgewidth=4)
+plt.rc('xtick', labelsize = 20)
+plt.rc('ytick', labelsize = 20)
+
+fig_width_pt = 703.27 #513.17           # Get this from LaTeX using \showthe\columnwidth
+inches_per_pt = 1.0/72.27               # Convert pt to inches
+golden_mean=0.9
+fig_width = fig_width_pt*inches_per_pt  # width in inches
+fig_height =fig_width*golden_mean       # height in inches
+fig_size = [fig_width,fig_height]
+#
+params = {'backend': 'pdf',
+             'axes.labelsize': 14,
+             'lines.markersize': 4,
+             'font.size': 14,
+             'xtick.major.size':6,
+             'xtick.minor.size':3,
+             'ytick.major.size':6,
+             'ytick.minor.size':3,
+             'xtick.major.width':0.5,
+             'ytick.major.width':0.5,
+             'xtick.minor.width':0.5,
+             'ytick.minor.width':0.5,
+             'lines.markeredgewidth':1,
+             'axes.linewidth':1.2,
+             'xtick.labelsize': 14,
+             'ytick.labelsize': 14,
+             'savefig.dpi':2000,
+   #      'path.simplify':True,
+         'font.family': 'serif',
+         'font.serif':'Times',
+             'text.usetex':True,
+             'text.latex.preamble': [r'\usepackage{amsmath}'],
+             'figure.figsize': fig_size}
+
+
+
+
+fig, ax = plt.subplots(2,3, figsize = (21,9))
 
 ax[0,0].semilogx(l, np.abs(dcl_tt_1sig), color='k', label= r'1$\sigma$')
 ax[0,0].semilogx(l, np.abs(dcl_tt_2sig), color='g', label= r'2$\sigma$')
