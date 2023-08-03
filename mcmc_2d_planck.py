@@ -45,9 +45,31 @@ def simpson(a,b,f,N):
 	return (h/3)*(integral+2*even+4*odd)
 
 
-def dU_dx(U, x,m,w):
+#def dU_dx(U, x,m,w):
                     # Here U is a vector such that y=U[0] and z=U[1]. This function should return [y', z']
-        return array( [U[1], -(2./(1.+x)+(3.*.3/(2.*(1.+x)**2.*(.3*(1.+x)**3.+.7))))*U[1] +2.*w*.3*np.exp(-2.*U[0])*((1.+x)/(.3*(1.+x)**3.+.7))-(np.power(10.,m))*U[0]/((x+1.)**2.*((1.+x)**3.+.7))],float)
+#        return array( [U[1], -(2./(1.+x)+(3.*.3/(2.*(1.+x)**2.*(.3*(1.+x)**3.+.7))))*U[1] +2.*w*.3*np.exp(-2.*U[0])*((1.+x)/(.3*(1.+x)**3.+.7))-(np.power(10.,m))*U[0]/((x+1.)**2.*((1.+x)**3.+.7))],float)
+
+
+#def dU_dx(U, x,m,w):
+                    # Here U is a vector such that y=U[0] and z=U[1]. This function should return [y', z']
+ #       return array([U[1],  -(2./(1.+x) + ((3.*.311*(1+x)**2+4*9.24*10**(-5)*(1+x)**3)/(2.*(.311*(1.+x)**3.+9.24*10**(-5)*(1+x)**4+.68))))*U[1] +6.*w*.311*np.exp(-2.*U[0])*((1.+x)/(.311*(1.+x)**3.+9.24*10**(-5)*(1+x)**4+.68))-((np.power(10.,m))*10**(-3))**2*U[0]/(2.4*(x+1.)**2.*(.311*(1.+x)**3.+9.24*10**(-5)*(1+x)**4+.68))],float)
+#def dU_dx(U, x,m,w):
+                    # Here U is a vector such that y=U[0] and z=U[1]. This function should return [y', z']
+ #       return array([U[1],  (2./(1.+x) - ((3.*.311*(1+x)**2+4*9.24*10**(-5)*(1+x)**3)/(2.*(.311*(1.+x)**3.+9.24*10**(-5)*(1+x)**4+.68))))*U[1] +6.*w*.311*np.exp(-2.*U[0])*((1.+x)/(.311*(1.+x)**3.+9.24*10**(-5)*(1+x)**4+.68))-((np.power(10.,m))*10**(-3))**2*U[0]/(2.4*(x+1.)**2.*(.311*(1.+x)**3.+9.24*10**(-5)*(1+x)**4+.68))],float)
+
+#def dU_dx(U, x,m,w):
+                    # Here U is a vector such that y=U[0] and z=U[1]. This function should return [y', z']
+ #       return array([U[1],  (2./(1.+x) - ((3.*.311*(1+x)**2+4*9.24*10**(-5)*(1+x)**3)/(2.*(.311*(1.+x)**3.+9.24*10**(-5)*(1+x)**4+.68))))*U[1] -6.*w*.311*np.exp(-2.*U[0])*((1.+x)/(.311*(1.+x)**3.+9.24*10**(-5)*(1+x)**4+.68))-((np.power(10.,m))*10**(-3))**2*U[0]/(2.4*(x+1.)**2.*(.311*(1.+x)**3.+9.24*10**(-5)*(1+x)**4+.68))],float)
+
+
+#def dU_dx(U, x,m,w):
+                    # Here U is a vector such that y=U[0] and z=U[1]. This function should return [y', z']
+ #       return array([U[1],  (2./(1.+x) - ((3.*.311*(1+x)**2+4*9.24*10**(-5)*(1+x)**3)/(2.*(.311*(1.+x)**3.+9.24*10**(-5)*(1+x)**4+.68))))*U[1] -6.*w*.311*np.exp(-2.*U[0])*((1.+x)/(.311*(1.+x)**3.+9.24*10**(-5)*(1+x)**4+.68))-(np.power(10.,m))**2*U[0]/((x+1.)**2.*(.311*(1.+x)**3.+9.24*10**(-5)*(1+x)**4+.68))],float)
+
+def dU_dx(U, x,m,w):
+        return array([U[1],  (2./(1.+x) - ((3.*.311*(1+x)**2+4*9.24*10**(-5)*(1+x)**3)/(2.*(.311*(1.+x)**3.+9.24*10**(-5)*(1+x)**4+.68))))*U[1] -6.*w*.311*np.exp(-2.*U[0])*((1.+x)/(.311*(1.+x)**3.+9.24*10**(-5)*(1+x)**4+.68))-(np.power(10.,m))**2*U[0]/((x+1.)**2.*(.311*(1.+x)**3.+9.24*10**(-5)*(1+x)**4+.68))],float)
+
+
 
 
 c1 = 1.0 / 2.0
@@ -166,20 +188,24 @@ def rho_cal( zeta,m):
 
 rho_dat= [-.0035,.001,.081 ]
 
-sigma = [.006, .012, .036]
-
-
+sigma = [.0069, .012, .049]
 
 def log_likelihood(theta, rho_data, rhoerr):
     zeta,m = theta
     model = rho_cal(zeta,m)
+
     sigma2 = [[1/rhoerr[0] ** 2,0,0], [0,1/rhoerr[1]**2,0], [0,0, 1/rhoerr[2]**2]]
-    rho_matrix= [(model[0]- (-.0035)),
-                 (model[1]- .001),
-                 (model[2]- .081)]
+    rho_matrix= [(model[0]- rho_dat[0]),
+                 (model[1]- rho_dat[1]),
+                 (model[2]- rho_dat[2])]
     chi= np.matmul(np.matmul(np.transpose(rho_matrix),sigma2),rho_matrix)
+    if np.isnan(model[0]):
+        return -1e12
     #talk to dan about the normalization term
     return -.5*chi
+
+
+
 
 
 
@@ -191,12 +217,12 @@ initial = np.array([zeta_guess,m_guess]) + 1e-4 * np.random.randn(2)
 #soln = minimize(nll, initial, args=(rho_dat, sigma))
 #zeta_ml, m_ml = soln.x
 #print(zeta_ml,m_ml)
-soln = [1.9754204948260492e-05, 0.004257419718252505]
+soln = [1.9754204948260492e-07, 0]
 
 
 def log_prior(theta):
     zeta, m = theta
-    if -5 < m < 3 and -3 < zeta < 3:
+    if -8 < m < 1 and -0.01 < zeta < .01:
         return 0.0
     return -np.inf
 
@@ -208,11 +234,11 @@ def log_probability(theta, rho_data, rho_err):
     return lp + log_likelihood(theta, rho_data, rho_err)
 
 with MPIPool() as pool:
-	pos =  soln + 1e-2 * np.random.randn(32, 2)
+	pos =  soln + 1e-5 * np.random.randn(32, 2)
 	nwalkers, ndim = pos.shape
 
 	sampler = emcee.EnsembleSampler(nwalkers, ndim, log_probability, args=(rho_dat, sigma), pool=pool)
-	sampler.run_mcmc(pos,5000, progress=True);
+	sampler.run_mcmc(pos,7000, progress=True);
 
 
 for i in range(0,32):
