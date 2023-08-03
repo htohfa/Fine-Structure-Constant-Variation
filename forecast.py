@@ -23,30 +23,11 @@ z3 = np.loadtxt("mode3.dat")[:, 0]
 alpha3 = np.loadtxt("mode3.dat")[:, 1]
 z4 = np.loadtxt("mode4.dat")[:, 0]
 alpha4 = np.loadtxt("mode4.dat")[:, 1]
-z5 = np.loadtxt("mode5.dat")[:, 0]
-alpha5 = np.loadtxt("mode5.dat")[:, 1]
-z6 = np.loadtxt("mode6.dat")[:, 0]
-alpha6 = np.loadtxt("mode6.dat")[:, 1]
-z7 = np.loadtxt("mode7.dat")[:, 0]
-alpha7 = np.loadtxt("mode7.dat")[:, 1]
-z8 = np.loadtxt("mode8.dat")[:, 0]
-alpha8 = np.loadtxt("mode8.dat")[:, 1]
-z9 = np.loadtxt("mode9.dat")[:, 0]
-alpha9 = np.loadtxt("mode9.dat")[:, 1]
-z10 = np.loadtxt("mode10.dat")[:, 0]
-alpha10 = np.loadtxt("mode10.dat")[:, 1]
-
 
 interpolation= interp1d(z,alpha, fill_value='extrapolate' )
 interpolation2= interp1d(z2,alpha2, fill_value='extrapolate' )
 interpolation3= interp1d(z3,alpha3, fill_value='extrapolate' )
 interpolation4= interp1d(z4,alpha4, fill_value='extrapolate' )
-interpolation5= interp1d(z5,alpha5, fill_value='extrapolate' )
-interpolation6= interp1d(z6,alpha6, fill_value='extrapolate' )
-interpolation7= interp1d(z7,alpha7, fill_value='extrapolate' )
-interpolation8= interp1d(z8,alpha8, fill_value='extrapolate' )
-interpolation9= interp1d(z9,alpha9, fill_value='extrapolate' )
-interpolation10= interp1d(z10,alpha10, fill_value='extrapolate' )
 
 
 def simpson(a,b,f,N):
@@ -68,9 +49,28 @@ def simpson(a,b,f,N):
 	return (h/3)*(integral+2*even+4*odd)
 
 
-def dU_dx(U, x,m,w):
+#def dU_dx(U, x,m,w):
                     # Here U is a vector such that y=U[0] and z=U[1]. This function should return [y', z']
-        return array( [U[1], -(2./(1.+x)+(3.*.3/(2.*(1.+x)**2.*(.3*(1.+x)**3.+.7))))*U[1] +2.*w*.3*np.exp(-2.*U[0])*((1.+x)/(.3*(1.+x)**3.+.7))-(np.power(10.,m))*U[0]/((x+1.)**2.*((1.+x)**3.+.7))],float)
+ #       return array( [U[1], -(2./(1.+x)+(3.*.3/(2.*(1.+x)**2.*(.3*(1.+x)**3.+.7))))*U[1] +2.*w*.3*np.exp(-2.*U[0])*((1.+x)/(.3*(1.+x)**3.+.7))-(np.power(10.,m))*U[0]/((x+1.)**2.*((1.+x)**3.+.7))],float)
+
+
+#def dU_dx(U, x,m,w):
+                    # Here U is a vector such that y=U[0] and z=U[1]. This function should return [y', z']
+#        return array([U[1],  -(2./(1.+x) + ((3.*.311*(1+x)**2+4*9.24*10**(-5)*(1+x)**3)/(2.*(.311*(1.+x)**3.+9.24*10**(-5)*(1+x)**4+.68))))*U[1] +6.*w*.311*np.exp(-2.*U[0])*((1.+x)/(.311*(1.+x)**3.+9.24*10**(-5)*(1+x)**4+.68))-((np.power(10.,m))*10**(-3))**2*U[0]/(2.4*(x+1.)**2.*(.311*(1.+x)**3.+9.24*10**(-5)*(1+x)**4+.68))],float)
+
+#def dU_dx(U, x,m,w):
+                    # Here U is a vector such that y=U[0] and z=U[1]. This function should return [y', z']
+ #       return array([U[1],  (2./(1.+x) - ((3.*.311*(1+x)**2+4*9.24*10**(-5)*(1+x)**3)/(2.*(.311*(1.+x)**3.+9.24*10**(-5)*(1+x)**4+.68))))*U[1] +6.*w*.311*np.exp(-2.*U[0])*((1.+x)/(.311*(1.+x)**3.+9.24*10**(-5)*(1+x)**4+.68))-((np.power(10.,m))*10**(-3))**2*U[0]/(2.4*(x+1.)**2.*(.311*(1.+x)**3.+9.24*10**(-5)*(1+x)**4+.68))],float)
+
+
+#def dU_dx(U, x,m,w):
+                    # Here U is a vector such that y=U[0] and z=U[1]. This function should return [y', z']
+ #       return array([U[1],  (2./(1.+x) - ((3.*.311*(1+x)**2+4*9.24*10**(-5)*(1+x)**3)/(2.*(.311*(1.+x)**3.+9.24*10**(-5)*(1+x)**4+.68))))*U[1] +6.*w*.311*np.exp(-2.*U[0])*((1.+x)/(.311*(1.+x)**3.+9.24*10**(-5)*(1+x)**4+.68))-((np.power(10.,m))*10**(-3))**2*U[0]/(2.4*(x+1.)**2.*(.311*(1.+x)**3.+9.24*10**(-5)*(1+x)**4+.68))],float)
+
+
+def dU_dx(U, x,m,w):
+        return array([U[1],  (2./(1.+x) - ((3.*.311*(1+x)**2+4*9.24*10**(-5)*(1+x)**3)/(2.*(.311*(1.+x)**3.+9.24*10**(-5)*(1+x)**4+.68))))*U[1] -6.*w*.311*np.exp(-2.*U[0])*((1.+x)/(.311*(1.+x)**3.+9.24*10**(-5)*(1+x)**4+.68))-(np.power(10.,m))**2*U[0]/((x+1.)**2.*(.311*(1.+x)**3.+9.24*10**(-5)*(1+x)**4+.68))],float)
+
 
 
 c1 = 1.0 / 2.0
@@ -194,32 +194,27 @@ def rho_cal( zeta,m):
 	rho_2= simpson(0,4000,rhoi2,5000)
 	rho_3= simpson(0,4000,rhoi3,5000)
 	rho_4= simpson(0,4000,rhoi4,5000)
-	rho_5= simpson(0,4000,rhoi5,5000)
-	rho_6= simpson(0,4000,rhoi6,5000)
-	rho_7= simpson(0,4000,rhoi7,5000)
-	rho_8= simpson(0,4000,rhoi8,5000)
-	rho_9= simpson(0,4000,rhoi9,5000)
-	rho_10= simpson(0,4000,rhoi10,5000)
 
-	rho_val= np.transpose([rho_1,rho_2,rho_3, rho_4,rho_5,rho_6,rho_7,rho_8,rho_9,rho_10])
+
+	rho_val= np.transpose([rho_1,rho_2,rho_3, rho_4])
 	return rho_val
 
 
 #sigma = [.006, .012, .036]
 
 
-sigma = [0.00134822, 0.00313751 ,0.00652159, 0.0129908, 0.0588853, 0.162472 ,0.2465, 0.434743, 0.524369, 0.916163]
+sigma = [0.00134822, 0.00313751 ,0.00652159, 0.0129908]
 
 def log_likelihood(theta,  rhoerr):
 	zeta,m = theta
 	model = rho_cal(zeta,m)
 
 	chisq=[]
-	for i in range(0,9):
+	for i in range(0,3):
 		chi= (model[i])**2/(sigma[i])**2
 		chisq.append(chi)
 	if np.isnan(chisq[0]):
-		return -1e6
+		return -1e12
 
 	return -.5*np.sum(chisq)
 
@@ -232,12 +227,12 @@ initial = np.array([zeta_guess,m_guess]) + 1e-4 * np.random.randn(2)
 #soln = minimize(nll, initial, args=(rho_dat, sigma))
 #zeta_ml, m_ml = soln.x
 #print(zeta_ml,m_ml)
-soln = [1.9754204948260492e-05, 0.004257419718252505]
+soln = [1.9754204948260492e-8, 0]
 
 
 def log_prior(theta):
     zeta, m = theta
-    if -5 < m < 3 and -3 < zeta < 3:
+    if -8 < m < 1 and -.01 < zeta < .01:
         return 0.0
     return -np.inf
 
@@ -249,7 +244,7 @@ def log_probability(theta,  rho_err):
     return lp + log_likelihood(theta, rho_err)
 
 with MPIPool() as pool:
-	pos =  soln + 1e-2 * np.random.randn(32, 2)
+	pos =  soln + 1e-5 * np.random.randn(32, 2)
 	nwalkers, ndim = pos.shape
 
 	sampler = emcee.EnsembleSampler(nwalkers, ndim, log_probability, args=([sigma]), pool=pool)
